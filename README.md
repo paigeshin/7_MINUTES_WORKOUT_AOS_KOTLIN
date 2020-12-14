@@ -786,3 +786,20 @@ class ExerciseStatusAdapter(val items: ArrayList<ExerciseModel>, val context: Co
         android:pathData="M9,16.2L4.8,12l-1.4,1.4L9,19 21,7l-1.4,-1.4L9,16.2z"/>
 </vector>
 ```
+
+# Set Up Custom Dialog
+
+```kotlin
+private fun customDialogForBackButton() {
+    val customDialog = Dialog(this)
+    customDialog.setContentView(R.layout.dialog_custom_back_confirmation)
+    customDialog.tvYes.setOnClickListener {
+        finish()
+        customDialog.dismiss()
+    }
+    customDialog.tvNo.setOnClickListener {
+        customDialog.dismiss()
+    }
+    customDialog.show()
+}
+```

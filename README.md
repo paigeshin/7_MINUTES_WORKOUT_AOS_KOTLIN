@@ -1,3 +1,5 @@
+[Drawable XML multiple examples](https://www.notion.so/Drawable-XML-multiple-examples-cf15ed77eb0c4a788222baedce79b35b)
+
 # Define dimension
 
 strings, styles, dimens, colors are all the same 
@@ -13,40 +15,6 @@ strings, styles, dimens, colors are all the same
     <dimen name="start_button_label_textsize">22sp</dimen>
 
 </resources>
-```
-
-# Create custom drawable xml
-
-- item_circular_color_accent_border.xml
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-
-    <stroke
-        android:width="5dp"
-        android:color="@color/purple_200"/>
-
-    <solid
-        android:color="@color/colorWhite"/>
-
-</shape>
-```
-
-- item_color_accent_border_ripple_background.xml
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/colorHighlighted">
-    <item android:id="@+id/mask">
-        <shape android:shape="oval">
-            <solid android:color="#000000"/>
-        </shape>
-    </item>
-    <item android:drawable="@drawable/item_circular_color_accent_border"/>
-</ripple>
 ```
 
 # Get rid of ActionBar

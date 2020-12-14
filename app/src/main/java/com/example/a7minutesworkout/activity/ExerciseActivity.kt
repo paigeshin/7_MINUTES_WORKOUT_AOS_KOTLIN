@@ -1,5 +1,6 @@
 package com.example.a7minutesworkout.activity
 
+import android.media.MediaPlayer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,7 @@ import com.example.a7minutesworkout.R
 import com.example.a7minutesworkout.model.ExerciseModel
 import com.example.a7minutesworkout.util.Constants
 import kotlinx.android.synthetic.main.activity_exercise.*
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -35,6 +37,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     // ** TTS **
     private var tts: TextToSpeech? = null
+
+    // ** Media Player **
+    private var player: MediaPlayer? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +87,15 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     // ** Timer **
     private fun setUpRestView() {
+
+        // ** Media Player **
+        try {
+            player = MediaPlayer.create(applicationContext, R.raw.press_start)
+            player!!.isLooping = false
+            player!!.start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         llRestView.visibility = View.VISIBLE
         llExerciseView.visibility = View.GONE
@@ -153,6 +167,15 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if(exerciseTimer != null) {
             exerciseTimer!!.cancel()
             exerciseProgress = 0
+        }
+        // ** TTS **
+        if(tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+        // ** player **
+        if(player != null) {
+            player!!.stop()
         }
         super.onDestroy()
     }

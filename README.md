@@ -597,3 +597,24 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 }
 ```
+
+# Adding A Media Player
+
+### Add Audio Resource
+
+- When you want to use audio resource, create raw directory inside of res.
+
+### Initialization
+
+```kotlin
+// ** Media Player **
+private var player: MediaPlayer? = null
+
+try {
+    player = MediaPlayer.create(applicationContext, R.raw.press_start)
+    player!!.isLooping = false
+    player!!.start()
+} catch (e: Exception) {
+    e.printStackTrace()
+}
+```

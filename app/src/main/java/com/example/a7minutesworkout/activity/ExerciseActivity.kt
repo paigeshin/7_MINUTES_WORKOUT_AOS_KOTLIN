@@ -1,5 +1,6 @@
 package com.example.a7minutesworkout.activity
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -26,12 +27,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     // ** Timer **
     private var restTimer: CountDownTimer? = null
     private var restProgress = 0
-    private var restTimerDuration: Long = 10
+    private var restTimerDuration: Long = 1 //10
 
     // ** Exercise Timer **
     private var exerciseTimer: CountDownTimer? = null
     private var exerciseProgress = 0
-    private var exerciseTimerDuration: Long = 30
+    private var exerciseTimerDuration: Long = 1 //30
 
     // ** Use Exercise Data **
     private var exerciseList: ArrayList<ExerciseModel>? = null
@@ -144,7 +145,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     setUpRestView()
 
                 } else {
-                    Toast.makeText(this@ExerciseActivity, "Congratulations! You have completed the 7 minutes workout.", Toast.LENGTH_SHORT).show()
+
+                    // All exercises are done, go to another scene
+                    finish()
+                    val intent = Intent(this@ExerciseActivity, FinishActivity::class.java)
+                    startActivity(intent)
+
                 }
 
             }

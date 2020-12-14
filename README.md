@@ -368,3 +368,15 @@ class Constants {
 ```
 
 - companion object ⇒ the replacement of static keyword
+
+# ImageView, keep intact ratio, trick
+
+```xml
+<ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/image"
+        android:scaleType="fitXY"/>
+```

@@ -40,11 +40,11 @@ class ExerciseActivity : AppCompatActivity() {
             finish()
         }
 
-        // ** Timer **
-        setUpRestView()
-
         // ** Use Exercise Data **
         exerciseList = Constants.defaultExerciseList()
+
+        // ** Timer **
+        setUpRestView()
 
     }
     // ** Timer **
@@ -75,6 +75,8 @@ class ExerciseActivity : AppCompatActivity() {
             restTimer!!.cancel()
             restProgress = 0
         }
+        tvUpcomingExerciseName.text = exerciseList!![currentExercisePosition + 1].getName()
+
         setRestProgressBar()
     }
 

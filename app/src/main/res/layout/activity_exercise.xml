@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activity.ExerciseActivity">
-    
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_exercise_activity"
         android:layout_width="match_parent"
@@ -62,6 +62,24 @@
                     tools:text="10" />
             </LinearLayout>
         </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="UPCOMING EXERCISE : "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvUpcomingExerciseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="#212121"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:text="Exercise Name" />
+
     </LinearLayout>
 
     <LinearLayout

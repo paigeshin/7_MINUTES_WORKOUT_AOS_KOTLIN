@@ -1,16 +1,23 @@
 package com.example.a7minutesworkout.activity
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.example.a7minutesworkout.R
 import com.example.a7minutesworkout.model.ExerciseModel
 import com.example.a7minutesworkout.util.Constants
 import kotlinx.android.synthetic.main.activity_exercise.*
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ExerciseActivity : AppCompatActivity() {
+// ** TTS **
+class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     // ** Timer **
     private var restTimer: CountDownTimer? = null
@@ -26,6 +33,10 @@ class ExerciseActivity : AppCompatActivity() {
     private var exerciseList: ArrayList<ExerciseModel>? = null
     private var currentExercisePosition = -1
 
+    // ** TTS **
+    private var tts: TextToSpeech? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exercise)
@@ -39,6 +50,9 @@ class ExerciseActivity : AppCompatActivity() {
         toolbar_exercise_activity.setNavigationOnClickListener {
             finish()
         }
+
+        // ** TTS **
+        tts = TextToSpeech(this, this)
 
         // ** Use Exercise Data **
         exerciseList = Constants.defaultExerciseList()
@@ -57,6 +71,7 @@ class ExerciseActivity : AppCompatActivity() {
                 tvTimer.text = (restTimerDuration.toInt() - restProgress).toString()
             }
 
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onFinish() {
                 currentExercisePosition++ //increment exercise data position whenever each exercise session is finished
                 Toast.makeText(this@ExerciseActivity, "Here now we will start the exercise.", Toast.LENGTH_LONG).show()
@@ -75,7 +90,10 @@ class ExerciseActivity : AppCompatActivity() {
             restTimer!!.cancel()
             restProgress = 0
         }
-        tvUpcomingExerciseName.text = exerciseList!![currentExercisePosition + 1].getName()
+
+        if(exerciseList != null) {
+            tvUpcomingExerciseName.text = exerciseList!![currentExercisePosition + 1].getName()
+        }
 
         setRestProgressBar()
     }
@@ -91,20 +109,19 @@ class ExerciseActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                if(exerciseList != null) {
-                    if(currentExercisePosition < exerciseList?.size!! - 1) {
-                        setUpRestView()
-                    } else {
-                        Toast.makeText(this@ExerciseActivity, "Congratulations! You have completed the 7 minutes workout.", Toast.LENGTH_SHORT).show()
-                    }
-                }
 
+                if(currentExercisePosition < exerciseList?.size!! - 1) {
+                    setUpRestView()
+                } else {
+                    Toast.makeText(this@ExerciseActivity, "Congratulations! You have completed the 7 minutes workout.", Toast.LENGTH_SHORT).show()
+                }
 
             }
         }.start()
     }
 
     // ** Exercise Timer **
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setUpExerciseView() {
 
         llRestView.visibility = View.GONE
@@ -115,6 +132,9 @@ class ExerciseActivity : AppCompatActivity() {
             exerciseProgress = 0
         }
         setExerciseProgressBar()
+
+        // ** TTS **
+        speakOut(exerciseList!![currentExercisePosition].getName())
 
         if(exerciseList != null) {
             ivImage.setImageResource(exerciseList!![currentExercisePosition].getImage())
@@ -137,6 +157,21 @@ class ExerciseActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    // ** TTS **
+    override fun onInit(status: Int) {
+        if(status == TextToSpeech.SUCCESS) {
+            val result = tts!!.setLanguage(Locale.US) //created from `onCreate`
+            if(result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The Language specified is not supported!")
+            }
+        }
+    }
+
+    // ** TTS **
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun speakOut(text: String) {
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
 
 }
 

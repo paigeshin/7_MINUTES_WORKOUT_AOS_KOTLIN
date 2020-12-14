@@ -58,7 +58,7 @@ class ExerciseActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                currentExercisePosition++
+                currentExercisePosition++ //increment exercise data position whenever each exercise session is finished
                 Toast.makeText(this@ExerciseActivity, "Here now we will start the exercise.", Toast.LENGTH_LONG).show()
                 setUpExerciseView()
             }
@@ -89,8 +89,15 @@ class ExerciseActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                Toast.makeText(this@ExerciseActivity, "Here now we will start the next rest screen.", Toast.LENGTH_LONG).show()
-                setUpRestView()
+                if(exerciseList != null) {
+                    if(currentExercisePosition < exerciseList?.size!! - 1) {
+                        setUpRestView()
+                    } else {
+                        Toast.makeText(this@ExerciseActivity, "Congratulations! You have completed the 7 minutes workout.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+
             }
         }.start()
     }
@@ -106,9 +113,13 @@ class ExerciseActivity : AppCompatActivity() {
             exerciseProgress = 0
         }
         setExerciseProgressBar()
+
+        if(exerciseList != null) {
+            ivImage.setImageResource(exerciseList!![currentExercisePosition].getImage())
+            tvExerciseName.text = exerciseList!![currentExercisePosition].getName()
+        }
+
     }
-
-
 
     override fun onDestroy() {
         // ** Timer **

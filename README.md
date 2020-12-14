@@ -618,3 +618,30 @@ try {
     e.printStackTrace()
 }
 ```
+
+# RecyclerView
+
+- RecyclerView can be thought of as a combination of a ListView and a GridView.
+
+### Why Use a RecyclerView?
+
+- Imagine you're creating a **ListView** with complicated custom items.
+- You create a row layout for the items and use that layout inside your adapter.
+- You inflate your item layout in "**getView()"**, referencing each view with the unique ID you provided in **XML** to customize and add view logic. You pass that to the ListView, and it's ready to be drawn on the screen. Or is it?
+- **ListViews** and **GridViews**  only do half the job of achieving true memory efficiency.
+- Android initially provided a solution to this problem on the Android Developers site with smooth Scrolling via the power of the "View Holder" pattern.
+- With this pattern, a class becomes an in-memory reference to all the views needed to fill your layout.
+- You set the references once and reuse them, working around the performance hit that comes with repeatedly calling findViewById().
+- Take note: This is an optional pattern for a ListView or GridView. If you're unaware of this detail, then you may wonder why your listVies and GridViews are so slow.
+
+### Why it is called RecyclerView?
+
+- Another perk of using RecyclerViews is that they come from default animations that you don't have to create or add yourself.
+- Because it requires a ViewHolder, the RecyclerView knows which animation to apply to which item and adds them as required.
+
+### LayoutManager in RecyclerView
+
+- The last and most interesting component of a RecyclerView it its **LayoutManager.**
+- This object positions the RecyclerView's items and tells it when to recycle items that have transitioned off-screen.
+- The ListView used to do this work alone.
+- The RecyclerView has broken out this functionality to allow for different kinds of layouts: Vertical, Horizontal, Grid, Staggered or your own!

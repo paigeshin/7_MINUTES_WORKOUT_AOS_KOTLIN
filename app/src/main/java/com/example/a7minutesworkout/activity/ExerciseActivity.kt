@@ -1,10 +1,13 @@
-package com.example.a7minutesworkout
+package com.example.a7minutesworkout.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
+import com.example.a7minutesworkout.R
+import com.example.a7minutesworkout.model.ExerciseModel
+import com.example.a7minutesworkout.util.Constants
 import kotlinx.android.synthetic.main.activity_exercise.*
 
 class ExerciseActivity : AppCompatActivity() {
@@ -18,6 +21,10 @@ class ExerciseActivity : AppCompatActivity() {
     private var exerciseTimer: CountDownTimer? = null
     private var exerciseProgress = 0
     private var exerciseTimerDuration: Long = 30
+
+    // ** Use Exercise Data **
+    private var exerciseList: ArrayList<ExerciseModel>? = null
+    private var currentExercisePosition = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +42,9 @@ class ExerciseActivity : AppCompatActivity() {
 
         // ** Timer **
         setUpRestView()
+
+        // ** Use Exercise Data **
+        exerciseList = Constants.defaultExerciseList()
 
     }
     // ** Timer **

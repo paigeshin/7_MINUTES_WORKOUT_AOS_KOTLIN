@@ -86,6 +86,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onFinish() {
                 currentExercisePosition++ //increment exercise data position whenever each exercise session is finished
+
+                //selected
+                exerciseList!![currentExercisePosition].setIsSelected(true)
+                exerciseAdapter?.notifyDataSetChanged()
+
                 setUpExerciseView()
             }
         }.start()
@@ -131,7 +136,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             override fun onFinish() {
 
                 if(currentExercisePosition < exerciseList?.size!! - 1) {
+
+                    exerciseList!![currentExercisePosition].setIsCompleted(true)
+                    exerciseList!![currentExercisePosition].setIsSelected(false)
+                    exerciseAdapter?.notifyDataSetChanged()
+
                     setUpRestView()
+
                 } else {
                     Toast.makeText(this@ExerciseActivity, "Congratulations! You have completed the 7 minutes workout.", Toast.LENGTH_SHORT).show()
                 }

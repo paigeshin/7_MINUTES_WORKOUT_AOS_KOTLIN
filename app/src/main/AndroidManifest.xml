@@ -10,9 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.7MinutesWorkout">
         <activity
-            android:name=".activity.FinishActivity"
+            android:name=".activity.BMIActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activity.FinishActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activity.ExerciseActivity"
             android:screenOrientation="portrait"

@@ -972,3 +972,110 @@ class BMIActivity : AppCompatActivity() {
 
 }
 ```
+
+# Drawable, Custom radio group & button design
+
+- xml, basic design for radio button group background
+- drawable_radio_group_tab_background
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="#ECEDEF"/>
+    <stroke android:width="0.5dp"
+        android:color="#9AA2AF"/>
+
+    <corners android:radius="30dp"/>
+
+</shape>
+```
+
+- xml, drawable, radio button
+- drawable_units_tab_selector
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO(Step 3 : Designed a custom selector for the Selected Item of the radio button.)-->
+<!--START-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+
+            <solid android:color="@color/colorAccent" />
+
+            <corners android:radius="30dp" />
+        </shape>
+    </item>
+</selector>
+<!--END-->
+```
+
+- xml, drawable, radio button color
+- drawable_units_tab_text_color_selector
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="#FFFFFF" android:state_checked="true"/>
+    <item android:color="#ADB3B3" android:state_checked="false"/>
+</selector>
+```
+
+- xml in layout
+
+```xml
+<RadioGroup
+        android:id="@+id/rgUnits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_bmi_activity"
+        android:layout_margin="10dp"
+        android:background="@drawable/drawable_radio_group_tab_background"
+        android:orientation="horizontal">
+
+    <RadioButton
+        android:id="@+id/rbMetricUnits"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_weight="0.50"
+        android:background="@drawable/drawable_units_tab_selector"
+        android:button="@null"
+        android:checked="true"
+        android:gravity="center"
+        android:text="METRIC UNITS"
+        android:textColor="@drawable/drawable_units_tab_text_color_selector"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <RadioButton
+        android:id="@+id/rbUsUnits"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_weight="0.50"
+        android:background="@drawable/drawable_units_tab_selector"
+        android:button="@null"
+        android:checked="false"
+        android:gravity="center"
+        android:text="US UNITS"
+        android:textColor="@drawable/drawable_units_tab_text_color_selector"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+</RadioGroup>
+```
+
+`@null` ⇒ get rid of android default functionality
+
+- create your own logic
+
+```kotlin
+//radio button
+radioGroupUnits.setOnCheckedChangeListener { group, checkedId ->
+    if(checkedId == R.id.rbMetricUnits) {
+        makeVisibleMetricUnitsView()
+    } else {
+        makeVisibleMetricUSUnitsView()
+    }
+}
+```

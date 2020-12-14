@@ -645,3 +645,73 @@ try {
 - This object positions the RecyclerView's items and tells it when to recycle items that have transitioned off-screen.
 - The ListView used to do this work alone.
 - The RecyclerView has broken out this functionality to allow for different kinds of layouts: Vertical, Horizontal, Grid, Staggered or your own!
+
+# Preparing RecyclerView
+
+### Prepare for ItemView
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tvItem"
+    android:layout_width="25dp"
+    android:layout_height="25dp"
+    android:layout_margin="1dp"
+    android:gravity="center"
+    android:textColor="#212121"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    android:padding="3dp"
+    tools:text="1">
+</TextView>
+```
+
+### Prepare for RecyclerView
+
+```kotlin
+package com.example.a7minutesworkout.adapter
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.a7minutesworkout.R
+import com.example.a7minutesworkout.model.ExerciseModel
+import kotlinx.android.synthetic.main.item_exercise_status.view.*
+
+class ExerciseStatusAdapter(val items: ArrayList<ExerciseModel>, val context: Context) : RecyclerView.Adapter<ExerciseStatusAdapter.ViewHolder>() {
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvItem = view.tvItem
+    }
+
+    //return itemView
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_exercise_status, parent, false))
+        return view
+    }
+
+    //bind data
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val model: ExerciseModel = items[position]
+        holder.tvItem.text = model.getId().toString()
+
+    }
+
+    override fun getItemCount(): Int {
+        return items.size
+    }
+
+}
+```
+
+### Initialize RecyclerView
+
+```kotlin
+rvExerciseStatus.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+exerciseAdapter = ExerciseStatusAdapter(exerciseList!!, this)
+rvExerciseStatus.setAdapter(exerciseAdapter)
+```

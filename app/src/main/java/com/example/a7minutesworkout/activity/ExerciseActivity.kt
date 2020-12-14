@@ -10,7 +10,9 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a7minutesworkout.R
+import com.example.a7minutesworkout.adapter.ExerciseStatusAdapter
 import com.example.a7minutesworkout.model.ExerciseModel
 import com.example.a7minutesworkout.util.Constants
 import kotlinx.android.synthetic.main.activity_exercise.*
@@ -41,6 +43,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     // ** Media Player **
     private var player: MediaPlayer? = null
 
+    // ** RecyclerView **
+    private var exerciseAdapter: ExerciseStatusAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +69,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // ** Timer **
         setUpRestView()
 
+        // ** RecyclerView **
+        setUpExerciseStatusRecyclerView()
+
     }
     // ** Timer **
     private fun setRestProgressBar() {
@@ -79,7 +86,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onFinish() {
                 currentExercisePosition++ //increment exercise data position whenever each exercise session is finished
-                Toast.makeText(this@ExerciseActivity, "Here now we will start the exercise.", Toast.LENGTH_LONG).show()
                 setUpExerciseView()
             }
         }.start()
@@ -194,6 +200,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun speakOut(text: String) {
         tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+    // ** RecyclerView **
+    private fun setUpExerciseStatusRecyclerView() {
+        rvExerciseStatus.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        exerciseAdapter = ExerciseStatusAdapter(exerciseList!!, this)
+        rvExerciseStatus.setAdapter(exerciseAdapter)
     }
 
 }

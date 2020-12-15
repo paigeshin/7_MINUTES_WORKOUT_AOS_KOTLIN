@@ -1111,6 +1111,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SqliteOpenHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLiteOpenHelper(context, DATEBASE_NAME, factory, DATABASE_VERSION) {
 
@@ -1139,6 +1141,20 @@ class SqliteOpenHelper(context: Context, factory: SQLiteDatabase.CursorFactory?)
         val db = this.writableDatabase
         db.insert(TABLE_HISTORY, null, values)
         db.close()
+    }
+
+    fun getAllCompletedDatesList() : ArrayList<String> {
+        val list = ArrayList<String>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_HISTORY", null)
+        while(cursor.moveToNext()) {
+            //COLUMN INDEX, -> completed date
+                val columnIndex: Int = cursor.getColumnIndex(COLUMN_COMPLETED_DATE)
+            val dateValue = (cursor.getString(columnIndex))
+            list.add(dateValue)
+        }
+        cursor.close()
+        return list
     }
 
 }
@@ -1191,6 +1207,104 @@ class FinishActivity : AppCompatActivity() {
 
         val dbHandler = SqliteOpenHelper(this, null)
         dbHandler.addDate(date)
+    }
+
+}
+```
+
+# Get all completed date for HistoryActivity
+
+- prepare HistoryAdapter
+
+```kotlin
+package com.example.a7minutesworkout.adapter
+
+import android.content.Context
+import android.graphics.Color
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.a7minutesworkout.R
+import kotlinx.android.synthetic.main.item_history_row.view.*
+
+class HistoryAdapter(val context: Context, val items: ArrayList<String>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+    
+    class ViewHolder(view : View) : RecyclerView.ViewHolder(view) {
+        val llHistoryMainItem = view.ll_history_item_main
+        val tvItem = view.tvItem
+        val tvPostion = view.tvPosition
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val viewHolder : HistoryAdapter.ViewHolder = ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_history_row, parent, false))
+        return viewHolder
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val date: String = items.get(position)
+        holder.tvPostion.text = (position + 1).toString()
+        holder.tvItem.text = date
+        if(position % 2 == 0) {
+            holder.llHistoryMainItem.setBackgroundColor(Color.parseColor("#EBEBEB"))
+        } else {
+            holder.llHistoryMainItem.setBackgroundColor(Color.parseColor("#FFFFFF"))
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return items.size
+    }
+
+}
+```
+
+- Set recyclerView in HistoryActivity
+
+```kotlin
+package com.example.a7minutesworkout.activity
+
+import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.a7minutesworkout.R
+import com.example.a7minutesworkout.adapter.HistoryAdapter
+import com.example.a7minutesworkout.database.SqliteOpenHelper
+import kotlinx.android.synthetic.main.activity_history.*
+
+class HistoryActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_history)
+
+        setSupportActionBar(toolbar_history_activity)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        toolbar_history_activity.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
+        getAllCompletedDates()
+    }
+
+    private fun getAllCompletedDates() {
+        val dbHandler = SqliteOpenHelper(this, null)
+        val allCompletedDatesList: ArrayList<String> = dbHandler.getAllCompletedDatesList()
+
+        if(allCompletedDatesList.size > 0) {
+            tvHistory.visibility = View.VISIBLE
+            rvHistory.visibility = View.VISIBLE
+            rvHistory.layoutManager = LinearLayoutManager(this)
+            val historyAdapter = HistoryAdapter(this, allCompletedDatesList)
+            rvHistory.setAdapter(historyAdapter)
+        } else {
+            tvHistory.visibility = View.GONE
+            rvHistory.visibility = View.GONE
+            tvNoDataAvailable.visibility = View.VISIBLE
+        }
+
     }
 
 }

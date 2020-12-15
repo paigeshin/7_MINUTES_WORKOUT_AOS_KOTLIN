@@ -44,4 +44,6 @@ class FinishActivity : AppCompatActivity() {
         dbHandler.addDate(date)
     }
 
+
+
 }

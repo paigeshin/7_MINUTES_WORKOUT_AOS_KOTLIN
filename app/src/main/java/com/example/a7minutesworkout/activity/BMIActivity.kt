@@ -41,6 +41,11 @@ class BMIActivity : AppCompatActivity() {
         makeVisibleMetricUnitsView()
         // END
 
+        setBMICalculateEventListener()
+
+    }
+
+    private fun setBMICalculateEventListener() {
         // TODO(Step 6 : Adding a check change listener to the radio group and according to the radio button.)
         // START
         // Radio Group change listener is set to the radio group which is added in XML.
@@ -58,24 +63,109 @@ class BMIActivity : AppCompatActivity() {
         // Button will calculate the input values in Metric Units
         btnCalculateUnits.setOnClickListener {
 
-            // The values are validated.
-            if (validateMetricUnits()) {
-
-                // The height value is converted to float value and divided by 100 to convert it to meter.
-                val heightValue: Float = etMetricUnitHeight.text.toString().toFloat() / 100
-
-                // The weight value is converted to float value
-                val weightValue: Float = etMetricUnitWeight.text.toString().toFloat()
-
-                // BMI value is calculated in METRIC UNITS using the height and weight value.
-                val bmi = weightValue / (heightValue * heightValue)
-
-                displayBMIResult(bmi)
+            if(currentVisibleView.equals(METRIC_UNITS_VIEW)) {
+                // The values are validated.
+                if (validateMetricUnits()) {
+                    // The height value is converted to float value and divided by 100 to convert it to meter.
+                    val heightValue: Float = etMetricUnitHeight.text.toString().toFloat() / 100
+                    // The weight value is converted to float value
+                    val weightValue: Float = etMetricUnitWeight.text.toString().toFloat()
+                    // BMI value is calculated in METRIC UNITS using the height and weight value.
+                    val bmi = weightValue / (heightValue * heightValue)
+                    displayBMIResult(bmi)
+                } else {
+                    Toast.makeText(this@BMIActivity, "Please enter valid values.", Toast.LENGTH_SHORT)
+                            .show()
+                }
             } else {
-                Toast.makeText(this@BMIActivity, "Please enter valid values.", Toast.LENGTH_SHORT)
-                    .show()
+                if(validateMetricUSUnits()) {
+                    val usUnitHeightValueFeet: String = etUsUnitHeightFeet.text.toString()
+                    val usUnitHeightValueInch: String = etUsUnitHeightInch.text.toString()
+                    val usUnitWeightValue: Float = etUsUnitWeight.text.toString().toFloat()
+
+                    val heightValue = usUnitHeightValueInch.toFloat() + usUnitHeightValueFeet.toFloat() * 12
+
+                    val bmi = 703 * (usUnitWeightValue / (heightValue * heightValue))
+                    displayBMIResult(bmi)
+                } else {
+                    Toast.makeText(this@BMIActivity, "Please enter valid values.", Toast.LENGTH_SHORT)
+                            .show()
+                }
             }
+
         }
+    }
+
+
+    /**
+     * Function is used to display the result of METRIC UNITS.
+     */
+    private fun displayBMIResult(bmi: Float) {
+
+        val bmiLabel: String
+        val bmiDescription: String
+
+        if (java.lang.Float.compare(bmi, 15f) <= 0) {
+            bmiLabel = "Very severely underweight"
+            bmiDescription = "Oops! You really need to take care of your better! Eat more!"
+        } else if (java.lang.Float.compare(bmi, 15f) > 0 && java.lang.Float.compare(
+                        bmi,
+                        16f
+                ) <= 0
+        ) {
+            bmiLabel = "Severely underweight"
+            bmiDescription = "Oops! You really need to take care of your better! Eat more!"
+        } else if (java.lang.Float.compare(bmi, 16f) > 0 && java.lang.Float.compare(
+                        bmi,
+                        18.5f
+                ) <= 0
+        ) {
+            bmiLabel = "Underweight"
+            bmiDescription = "Oops! You really need to take care of your better! Eat more!"
+        } else if (java.lang.Float.compare(bmi, 18.5f) > 0 && java.lang.Float.compare(
+                        bmi,
+                        25f
+                ) <= 0
+        ) {
+            bmiLabel = "Normal"
+            bmiDescription = "Congratulations! You are in a good shape!"
+        } else if (java.lang.Float.compare(bmi, 25f) > 0 && java.lang.Float.compare(
+                        bmi,
+                        30f
+                ) <= 0
+        ) {
+            bmiLabel = "Overweight"
+            bmiDescription = "Oops! You really need to take care of your yourself! Workout maybe!"
+        } else if (java.lang.Float.compare(bmi, 30f) > 0 && java.lang.Float.compare(
+                        bmi,
+                        35f
+                ) <= 0
+        ) {
+            bmiLabel = "Obese Class | (Moderately obese)"
+            bmiDescription = "Oops! You really need to take care of your yourself! Workout maybe!"
+        } else if (java.lang.Float.compare(bmi, 35f) > 0 && java.lang.Float.compare(
+                        bmi,
+                        40f
+                ) <= 0
+        ) {
+            bmiLabel = "Obese Class || (Severely obese)"
+            bmiDescription = "OMG! You are in a very dangerous condition! Act now!"
+        } else {
+            bmiLabel = "Obese Class ||| (Very Severely obese)"
+            bmiDescription = "OMG! You are in a very dangerous condition! Act now!"
+        }
+
+        tvYourBMI.visibility = View.VISIBLE
+        tvBMIValue.visibility = View.VISIBLE
+        tvBMIType.visibility = View.VISIBLE
+        tvBMIDescription.visibility = View.VISIBLE
+
+        // This is used to round of the result value to 2 decimal values after "."
+        val bmiValue = BigDecimal(bmi.toDouble()).setScale(2, RoundingMode.HALF_EVEN).toString()
+
+        tvBMIValue.text = bmiValue // Value is set to TextView
+        tvBMIType.text = bmiLabel // Label is set to TextView
+        tvBMIDescription.text = bmiDescription // Description is set to TextView
     }
 
     // TODO(Step 3 : Making a function to make the METRIC UNITS view visible.)
@@ -131,74 +221,21 @@ class BMIActivity : AppCompatActivity() {
         return isValid
     }
 
-    /**
-     * Function is used to display the result of METRIC UNITS.
-     */
-    private fun displayBMIResult(bmi: Float) {
-
-        val bmiLabel: String
-        val bmiDescription: String
-
-        if (java.lang.Float.compare(bmi, 15f) <= 0) {
-            bmiLabel = "Very severely underweight"
-            bmiDescription = "Oops! You really need to take care of your better! Eat more!"
-        } else if (java.lang.Float.compare(bmi, 15f) > 0 && java.lang.Float.compare(
-                bmi,
-                16f
-            ) <= 0
-        ) {
-            bmiLabel = "Severely underweight"
-            bmiDescription = "Oops! You really need to take care of your better! Eat more!"
-        } else if (java.lang.Float.compare(bmi, 16f) > 0 && java.lang.Float.compare(
-                bmi,
-                18.5f
-            ) <= 0
-        ) {
-            bmiLabel = "Underweight"
-            bmiDescription = "Oops! You really need to take care of your better! Eat more!"
-        } else if (java.lang.Float.compare(bmi, 18.5f) > 0 && java.lang.Float.compare(
-                bmi,
-                25f
-            ) <= 0
-        ) {
-            bmiLabel = "Normal"
-            bmiDescription = "Congratulations! You are in a good shape!"
-        } else if (java.lang.Float.compare(bmi, 25f) > 0 && java.lang.Float.compare(
-                bmi,
-                30f
-            ) <= 0
-        ) {
-            bmiLabel = "Overweight"
-            bmiDescription = "Oops! You really need to take care of your yourself! Workout maybe!"
-        } else if (java.lang.Float.compare(bmi, 30f) > 0 && java.lang.Float.compare(
-                bmi,
-                35f
-            ) <= 0
-        ) {
-            bmiLabel = "Obese Class | (Moderately obese)"
-            bmiDescription = "Oops! You really need to take care of your yourself! Workout maybe!"
-        } else if (java.lang.Float.compare(bmi, 35f) > 0 && java.lang.Float.compare(
-                bmi,
-                40f
-            ) <= 0
-        ) {
-            bmiLabel = "Obese Class || (Severely obese)"
-            bmiDescription = "OMG! You are in a very dangerous condition! Act now!"
-        } else {
-            bmiLabel = "Obese Class ||| (Very Severely obese)"
-            bmiDescription = "OMG! You are in a very dangerous condition! Act now!"
+    private fun validateMetricUSUnits() : Boolean {
+        var isValid = true
+        when {
+            etUsUnitHeightFeet.text.toString().isEmpty() -> {
+                isValid = false
+            }
+            etUsUnitHeightFeet.text.toString().isEmpty() -> {
+                isValid = false
+            }
+            etUsUnitWeight.text.toString().isEmpty() -> {
+                isValid = false
+            }
         }
-
-        tvYourBMI.visibility = View.VISIBLE
-        tvBMIValue.visibility = View.VISIBLE
-        tvBMIType.visibility = View.VISIBLE
-        tvBMIDescription.visibility = View.VISIBLE
-
-        // This is used to round of the result value to 2 decimal values after "."
-        val bmiValue = BigDecimal(bmi.toDouble()).setScale(2, RoundingMode.HALF_EVEN).toString()
-
-        tvBMIValue.text = bmiValue // Value is set to TextView
-        tvBMIType.text = bmiLabel // Label is set to TextView
-        tvBMIDescription.text = bmiDescription // Description is set to TextView
+        return isValid
     }
+
+
 }

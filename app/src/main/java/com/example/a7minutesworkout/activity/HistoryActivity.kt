@@ -3,7 +3,6 @@ package com.example.a7minutesworkout.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.a7minutesworkout.R
-import kotlinx.android.synthetic.main.activity_finish.*
 import kotlinx.android.synthetic.main.activity_history.*
 
 
